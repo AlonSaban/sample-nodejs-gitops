@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sample-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/<your-github-username>/<gitops-repo-name>.git'
+    targetRevision: HEAD
+    path: sample-app
+    helm:
+      valueFiles:
+        - values.yaml
+      # Temporarily override image to use your local image until Phase 3 pushes to Docker Hub / GHCR
+      parameters:
+        - name: image.repository
+          value: sample-nodejs
+        - name: image.tag
+          value: local
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: sample-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

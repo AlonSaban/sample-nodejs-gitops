@@ -1,0 +1,36 @@
+replicaCount: 2
+
+image:
+  repository: <your-dockerhub-username>/sample-nodejs
+  pullPolicy: IfNotPresent
+  tag: "1.0.0"
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+config:
+  port: "8080"
+
+# Bonus: Demonstrate Secret usage alongside ConfigMap (as mentioned in the prompt)
+secret:
+  apiKey: "super-secret-demo-key"
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: "" # Empty host allows direct access via http://localhost/my-app without editing Windows hosts file
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
