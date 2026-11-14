@@ -1,0 +1,11 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "sample-nodejs.fullname" . }}-pdb
+  labels:
+    {{- include "sample-nodejs.labels" . | nindent 4 }}
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      {{- include "sample-nodejs.selectorLabels" . | nindent 6 }}

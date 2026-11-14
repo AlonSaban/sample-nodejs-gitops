@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "sample-app.fullname" . }}
+  name: {{ include "sample-nodejs.fullname" . }}
   labels:
-    {{- include "sample-app.labels" . | nindent 4 }}
+    {{- include "sample-nodejs.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   # Add rolling updates
@@ -14,11 +14,11 @@ spec:
       maxSurge: 1
   selector:
     matchLabels:
-      {{- include "sample-app.selectorLabels" . | nindent 6 }}
+      {{- include "sample-nodejs.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "sample-app.selectorLabels" . | nindent 8 }}
+        {{- include "sample-nodejs.selectorLabels" . | nindent 8 }}
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: {{ .Values.service.targetPort | quote }}
@@ -47,12 +47,12 @@ spec:
             - name: PORT
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "sample-app.fullname" . }}-config
+                  name: {{ include "sample-nodejs.fullname" . }}-config
                   key: PORT
             - name: APP_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "sample-app.fullname" . }}-secret
+                  name: {{ include "sample-nodejs.fullname" . }}-secret
                   key: APP_SECRET_KEY
           livenessProbe:
             httpGet:

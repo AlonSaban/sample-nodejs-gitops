@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sample-app
+  name: sample-nodejs
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,13 +10,13 @@ spec:
   source:
     repoURL: 'https://github.com/alonsaban/sample-nodejs.git'
     targetRevision: HEAD
-    path: sample-app
+    path: sample-nodejs
     helm:
       valueFiles:
         - values.yaml
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: sample-app
+    namespace: sample-nodejs
   syncPolicy:
     automated:
       prune: true
