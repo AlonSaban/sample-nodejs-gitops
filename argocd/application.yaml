@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/alonsaban/sample-nodejs.git'
+    repoURL: 'https://github.com/alonsaban/sample-nodejs-gitops.git'
     targetRevision: HEAD
     path: sample-nodejs
     helm:
