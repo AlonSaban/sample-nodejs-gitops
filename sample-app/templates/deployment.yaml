@@ -6,6 +6,12 @@ metadata:
     {{- include "sample-app.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  # Add rolling updates
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   selector:
     matchLabels:
       {{- include "sample-app.selectorLabels" . | nindent 6 }}
@@ -18,13 +24,21 @@ spec:
         prometheus.io/port: {{ .Values.service.targetPort | quote }}
         prometheus.io/path: "/metrics"
     spec:
+      # Pod-level securityContext
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000 # Matches built-in 'node' user or your custom UID
+        runAsUser: 1000
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          # Container-level securityContext
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
